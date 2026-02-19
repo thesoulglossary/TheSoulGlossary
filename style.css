@@ -184,6 +184,34 @@ h2 {
   margin: 20px 0;
 }
 
+/* Buttons: Back, Next, Prev */
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.post-nav button {
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--accent);
+  transition: all 0.3s ease;
+  margin: 5px 0;
+}
+
+.post-nav button:hover {
+  background: var(--accent);
+  color: var(--panel);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
 /* Animations */
 @keyframes fadeUp {
   from {
@@ -194,6 +222,29 @@ h2 {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Page fade transitions */
+.fade-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 /* Responsive */
@@ -237,5 +288,10 @@ h2 {
   .markdown p,
   .excerpt {
     font-size: 16px;
+  }
+
+  .post-nav {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
