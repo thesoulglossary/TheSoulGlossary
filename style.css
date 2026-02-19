@@ -14,9 +14,21 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg);
+  background: #f6f5f3;
   color: var(--text);
   line-height: 1.8;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.04;
+  z-index: 0;
 }
 
 .layout {
@@ -80,13 +92,24 @@ h2 {
 }
 
 a {
+  position: relative;
   text-decoration: none;
   color: var(--accent);
-  transition: 0.2s ease;
 }
 
-a:hover {
-  opacity: 0.6;
+a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+a:hover::after {
+  width: 100%;
 }
 
 .date {
@@ -146,4 +169,21 @@ a:hover {
   .markdown p {
     font-size: 16px;
   }
+}
+
+.alphabet {
+  margin-top: 40px;
+  font-size: 14px;
+  letter-spacing: 3px;
+}
+
+.alphabet span {
+  margin-right: 8px;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: 0.2s ease;
+}
+
+.alphabet span:hover {
+  opacity: 1;
 }

@@ -17,6 +17,40 @@ fetch(BASE_PATH + "/posts.json")
 
     posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    // Generate alphabet navigation
+const alphabetContainer = document.getElementById("alphabet-nav");
+
+if (alphabetContainer) {
+
+  // Get first letters from titles
+  const letters = posts.map(post =>
+    post.title.trim()[0].toUpperCase()
+  );
+
+  // Remove duplicates
+  const uniqueLetters = [...new Set(letters)].sort();
+
+  uniqueLetters.forEach(letter => {
+    const span = document.createElement("span");
+    span.textContent = letter;
+
+    span.addEventListener("click", () => {
+      const target = document.querySelector(
+        `[data-letter="${letter}"]`
+      );
+
+      if (target) {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+
+    alphabetContainer.appendChild(span);
+  });
+}
+
     const path = window.location.pathname;
 
     // HOMEPAGE
@@ -27,6 +61,12 @@ fetch(BASE_PATH + "/posts.json")
 
       posts.forEach(post => {
         const article = document.createElement("article");
+
+        article.setAttribute(
+  "data-letter",
+  post.title.trim()[0].toUpperCase()
+);
+
 
         article.innerHTML = `
           <h2>
