@@ -1,3 +1,7 @@
+const BASE_PATH = window.location.pathname.split("/")[1]
+  ? "/" + window.location.pathname.split("/")[1]
+  : "";
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-GB", {
@@ -7,7 +11,7 @@ function formatDate(dateString) {
   });
 }
 
-fetch("posts.json")
+fetch(BASE_PATH + "/posts.json")
   .then(res => res.json())
   .then(posts => {
 
@@ -16,7 +20,7 @@ fetch("posts.json")
     const path = window.location.pathname;
 
     // HOMEPAGE
-    if (path === "/" || path.endsWith("index.html")) {
+    if (path.endsWith("index.html") || path === BASE_PATH + "/") {
 
       const container = document.getElementById("posts");
       if (!container) return;
@@ -26,7 +30,7 @@ fetch("posts.json")
 
         article.innerHTML = `
           <h2>
-            <a href="/posts/${post.id}/">
+            <a href="${BASE_PATH}/posts/${post.id}/">
               ${post.title}
             </a>
           </h2>
@@ -36,14 +40,16 @@ fetch("posts.json")
         container.appendChild(article);
       });
 
-    } 
+    }
+
     // POST PAGE
-    else if (path.includes("/posts/")) {
+    if (path.includes("/posts/")) {
 
       const slug = path.split("/posts/")[1].replaceAll("/", "");
       const post = posts.find(p => p.id === slug);
 
       const container = document.getElementById("post-content");
+      if (!container) return;
 
       if (!post) {
         container.innerHTML = "<p>Post not found.</p>";
