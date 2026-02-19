@@ -66,3 +66,9 @@ fetch(BASE_PATH + "/posts.json")
 }
 
   });
+
+  document.body.style.opacity = 0;
+window.onload = () => {
+  document.body.style.transition = "opacity 0.5s ease";
+  document.body.style.opacity = 1;
+};
