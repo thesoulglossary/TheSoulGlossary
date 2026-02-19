@@ -1,7 +1,9 @@
+// Detect base path
 const BASE_PATH = window.location.pathname.split("/")[1]
   ? "/" + window.location.pathname.split("/")[1]
   : "";
 
+// Pretty date formatting
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-GB", {
@@ -11,112 +13,94 @@ function formatDate(dateString) {
   });
 }
 
+// Fetch posts.json
 fetch(BASE_PATH + "/posts.json")
   .then(res => res.json())
   .then(posts => {
 
+    // Sort newest first
     posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    // Generate alphabet navigation
-const alphabetContainer = document.getElementById("alphabet-nav");
-
-if (alphabetContainer) {
-
-  // Get first letters from titles
-  const letters = posts.map(post =>
-    post.title.trim()[0].toUpperCase()
-  );
-
-  // Remove duplicates
-  const uniqueLetters = [...new Set(letters)].sort();
-
-  uniqueLetters.forEach(letter => {
-    const span = document.createElement("span");
-    span.textContent = letter;
-
-    span.addEventListener("click", () => {
-      const target = document.querySelector(
-        `[data-letter="${letter}"]`
-      );
-
-      if (target) {
-        target.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-      }
-    });
-
-    alphabetContainer.appendChild(span);
-  });
-}
 
     const path = window.location.pathname;
 
-    // HOMEPAGE
+    // ---------------- HOMEPAGE ----------------
     if (path.endsWith("index.html") || path === BASE_PATH + "/") {
 
       const container = document.getElementById("posts");
       if (!container) return;
 
+      // ---------------- Alphabet Navigation ----------------
+      const alphabetContainer = document.getElementById("alphabet-nav");
+      if (alphabetContainer) {
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        alphabet.forEach(letter => {
+          const span = document.createElement("span");
+          span.textContent = letter;
+
+          span.addEventListener("click", () => {
+            const target = document.querySelector(
+              `[data-letter="${letter}"]`
+            );
+            if (target) {
+              target.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+
+          alphabetContainer.appendChild(span);
+        });
+      }
+
+      // ---------------- Render Posts ----------------
       posts.forEach(post => {
+
         const article = document.createElement("article");
 
-        article.setAttribute(
-  "data-letter",
-  post.title.trim()[0].toUpperCase()
-);
+        // For alphabet navigation
+        article.setAttribute("data-letter", post.title.trim()[0].toUpperCase());
 
-const excerpt = post.content
-  .replace(/[#*>\n-]/g, "")
-  .substring(0, 140) + "...";
+        // Excerpt: preserve line breaks
+        const excerpt = post.content
+          .replace(/#/g, "")
+          .replace(/\n/g, "<br>")
+          .substring(0, 300) + "...";
 
-article.innerHTML = `
-  <h2>
-    <a href="${BASE_PATH}/posts.html#${post.id}">
-      ${post.title}
-    </a>
-  </h2>
-  <p class="date">${formatDate(post.date)}</p>
-  <p class="excerpt">${excerpt}</p>
-`;
+        article.innerHTML = `
+          <h2>${post.title}</h2>
+          <p class="date">${formatDate(post.date)}</p>
+          <p class="excerpt">${excerpt}</p>
+        `;
 
+        // Make entire block clickable
+        article.addEventListener("click", () => {
+          window.location.href = `${BASE_PATH}/posts.html#${post.id}`;
+        });
 
         container.appendChild(article);
       });
-
     }
 
-    // POST PAGE
+    // ---------------- POST PAGE ----------------
     if (window.location.hash) {
 
-  const slug = window.location.hash.substring(1);
-  const post = posts.find(p => p.id === slug);
+      const slug = window.location.hash.substring(1);
+      const post = posts.find(p => p.id === slug);
 
-  const container = document.getElementById("post-content");
-  if (!container) return;
+      const container = document.getElementById("post-content");
+      if (!container) return;
 
-  if (!post) {
-    container.innerHTML = "<p>Post not found.</p>";
-    return;
-  }
+      if (!post) {
+        container.innerHTML = "<p>Post not found.</p>";
+        return;
+      }
 
-  container.innerHTML = `
-  <div class="entry">
-    <h1 class="entry-word">${post.title}</h1>
-    <p class="entry-meta">${formatDate(post.date)}</p>
-    <div class="entry-definition">
-      ${marked.parse(post.content)}
-    </div>
-  </div>
-`;
-
-}
-
+      container.innerHTML = `
+        <div class="entry">
+          <h1 class="entry-word">${post.title}</h1>
+          <p class="entry-meta">${formatDate(post.date)}</p>
+          <div class="entry-definition">
+            ${marked.parse(post.content)}
+          </div>
+        </div>
+      `;
+    }
   });
-
-  document.body.style.opacity = 0;
-window.onload = () => {
-  document.body.style.transition = "opacity 0.5s ease";
-  document.body.style.opacity = 1;
-};
