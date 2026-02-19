@@ -67,15 +67,20 @@ if (alphabetContainer) {
   post.title.trim()[0].toUpperCase()
 );
 
+const excerpt = post.content
+  .replace(/[#*>\n-]/g, "")
+  .substring(0, 140) + "...";
 
-        article.innerHTML = `
-          <h2>
-            <a href="${BASE_PATH}/posts.html#${post.id}">
-              ${post.title}
-            </a>
-          </h2>
-          <p class="date">${formatDate(post.date)}</p>
-        `;
+article.innerHTML = `
+  <h2>
+    <a href="${BASE_PATH}/posts.html#${post.id}">
+      ${post.title}
+    </a>
+  </h2>
+  <p class="date">${formatDate(post.date)}</p>
+  <p class="excerpt">${excerpt}</p>
+`;
+
 
         container.appendChild(article);
       });
@@ -97,12 +102,15 @@ if (alphabetContainer) {
   }
 
   container.innerHTML = `
-    <h1>${post.title}</h1>
-    <p class="date">${formatDate(post.date)}</p>
-    <div class="markdown">
+  <div class="entry">
+    <h1 class="entry-word">${post.title}</h1>
+    <p class="entry-meta">${formatDate(post.date)}</p>
+    <div class="entry-definition">
       ${marked.parse(post.content)}
     </div>
-  `;
+  </div>
+`;
+
 }
 
   });
