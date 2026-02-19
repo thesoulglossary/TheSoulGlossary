@@ -1,12 +1,14 @@
 [
     {
+        "id": "my-first-json-post",
         "title": "My First JSON Post",
-        "date": "19 February 2026",
-        "content": "First paragraph.\n\nSecond paragraph."
+        "date": "2026-02-19",
+        "content": "# Hello\n\nThis post is written in **Markdown**.\n\nIt supports:\n\n- Lists\n- Bold\n- Headings\n\nPretty clean."
     },
     {
+        "id": "why-i-built-this-blog",
         "title": "Why I Built This Blog",
-        "date": "18 February 2026",
-        "content": "Because I wanted control. No themes. No limits. Just pure HTML, CSS and JS."
+        "date": "2026-02-18",
+        "content": "Because I wanted full control.\n\nNo themes. No limits."
     }
 ]

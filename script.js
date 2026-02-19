@@ -1,18 +1,24 @@
 fetch("posts.json")
-  .then(response => response.json())
+  .then(res => res.json())
   .then(posts => {
+
+    // Sort by date (newest first)
+    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
     const container = document.getElementById("posts");
 
-    posts.reverse().forEach(post => {
+    posts.forEach(post => {
       const article = document.createElement("article");
 
       article.innerHTML = `
-        <h2>${post.title}</h2>
+        <h2>
+          <a href="post.html?id=${post.id}">
+            ${post.title}
+          </a>
+        </h2>
         <p><em>${post.date}</em></p>
-        <p>${post.content.replace(/\n/g, "<br>")}</p>
       `;
 
       container.appendChild(article);
     });
-  })
-  .catch(error => console.error("Error loading posts:", error));
+  });
