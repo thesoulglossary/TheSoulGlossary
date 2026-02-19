@@ -13,6 +13,24 @@ function formatDate(dateString) {
   });
 }
 
+// Hamburger toggle for mobile
+const hamburger = document.createElement("div");
+hamburger.className = "hamburger";
+hamburger.innerHTML = `<span></span><span></span><span></span>`;
+document.body.appendChild(hamburger);
+
+const sidebar = document.querySelector(".sidebar");
+hamburger.addEventListener("click", () => {
+  sidebar.classList.toggle("active");
+});
+
+// Close sidebar when clicking outside
+document.addEventListener("click", (e) => {
+  if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+    sidebar.classList.remove("active");
+  }
+});
+
 // Fetch posts.json
 fetch(BASE_PATH + "/posts.json")
   .then(res => res.json())
@@ -29,7 +47,6 @@ fetch(BASE_PATH + "/posts.json")
       const container = document.getElementById("posts");
       if (!container) return;
 
-      // ---------------- Render Posts ----------------
       posts.forEach(post => {
 
         const article = document.createElement("article");
