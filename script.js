@@ -64,7 +64,9 @@ document.addEventListener("click", e => {
 // Load posts
 let ALL_POSTS = [];
 
-fetch(BASE_PATH + "/posts.json")
+fetch(BASE_PATH + "/posts.json?ts=" + Date.now(), {
+  cache: "no-store"
+})
   .then(res => res.json())
   .then(posts => {
 
