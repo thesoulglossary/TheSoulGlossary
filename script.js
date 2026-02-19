@@ -2,6 +2,8 @@ const BASE_PATH = window.location.pathname.split("/")[1]
   ? "/" + window.location.pathname.split("/")[1]
   : "";
 
+let POSTS = [];
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-GB", {
@@ -11,119 +13,78 @@ function formatDate(dateString) {
   });
 }
 
-let ALL_POSTS = [];
-let refreshInterval = 60;
-let countdown = refreshInterval;
-
-function updateCountdown() {
-  const el = document.getElementById("countdown");
-  if (!el) return;
-
-  el.textContent = countdown;
-  countdown--;
-
-  if (countdown < 0) {
-    countdown = refreshInterval;
-    loadPosts();
-  }
-}
-
-setInterval(updateCountdown, 1000);
-
-function updateRefreshTime() {
-  const el = document.getElementById("last-refresh");
-  if (!el) return;
-
-  const now = new Date();
-  el.textContent = now.toLocaleTimeString("en-GB");
-}
-
 function loadPosts() {
-
   fetch(BASE_PATH + "/posts.json?ts=" + Date.now(), {
     cache: "no-store"
   })
   .then(res => res.json())
-  .then(posts => {
-
-    posts.sort((a,b)=> new Date(b.date)-new Date(a.date));
-    ALL_POSTS = posts;
-
-    renderHome();
-    renderPost();
+  .then(data => {
+    data.sort((a,b)=> new Date(b.date)-new Date(a.date));
+    POSTS = data;
 
     const counter = document.getElementById("post-count");
-    if (counter) counter.textContent = posts.length;
+    if (counter) counter.textContent = POSTS.length;
 
-    updateRefreshTime();
+    renderHome();
+    renderEntry();
   });
 }
 
 function renderHome() {
-
-  const path = window.location.pathname;
-  if (!(path.endsWith("index.html") || path === BASE_PATH + "/")) return;
+  if (!document.getElementById("posts")) return;
 
   const container = document.getElementById("posts");
-  if (!container) return;
-
   container.innerHTML = "";
 
-  ALL_POSTS.forEach(post => {
+  POSTS.forEach(post => {
 
-    const article = document.createElement("article");
+    const card = document.createElement("div");
+    card.className = "entry-card";
 
-    const excerpt = post.content.replace(/#/g,"").substring(0,100);
+    const excerpt = post.content.replace(/#/g,"").substring(0,120);
 
-    article.innerHTML = `
-      <h2>${post.title}</h2>
-      <p class="date">${formatDate(post.date)}</p>
-      <p class="excerpt">${excerpt}...</p>
-      <span class="read-more">Read more</span>
+    card.innerHTML = `
+      <div class="entry-word">${post.title}</div>
+      <div class="entry-date">${formatDate(post.date)}</div>
+      <div class="entry-excerpt">${excerpt}...</div>
     `;
 
-    article.addEventListener("click", () => {
+    card.onclick = () => {
       window.location.href = `${BASE_PATH}/posts.html#${post.id}`;
-    });
+    };
 
-    container.appendChild(article);
+    container.appendChild(card);
   });
 }
 
-function renderPost() {
-
-  if (!window.location.pathname.includes("posts.html")) return;
-
-  const container = document.getElementById("post-content");
-  if (!container) return;
+function renderEntry() {
+  if (!document.getElementById("post-content")) return;
 
   const slug = window.location.hash.substring(1);
   if (!slug) return;
 
-  const index = ALL_POSTS.findIndex(p => p.id === slug);
-  const post = ALL_POSTS[index];
+  const index = POSTS.findIndex(p => p.id === slug);
+  const post = POSTS[index];
   if (!post) return;
 
-  const prevPost = ALL_POSTS[index + 1] || null;
-  const nextPost = ALL_POSTS[index - 1] || null;
+  const prev = POSTS[index + 1];
+  const next = POSTS[index - 1];
+
+  const container = document.getElementById("post-content");
 
   container.innerHTML = `
-    <div class="entry">
-      <div class="post-nav">
-        <button onclick="window.location.href='${BASE_PATH}/index.html'">Back</button>
-        <div>
-          ${prevPost ? `<button onclick="window.location.hash='${prevPost.id}'">Previous</button>` : ""}
-          ${nextPost ? `<button onclick="window.location.hash='${nextPost.id}'">Next</button>` : ""}
-        </div>
-      </div>
+    <h1>${post.title}</h1>
+    <div class="entry-meta">${formatDate(post.date)}</div>
+    <div class="entry-definition">${marked.parse(post.content)}</div>
 
-      <h1 class="entry-word">${post.title}</h1>
-      <p class="entry-meta">${formatDate(post.date)}</p>
-      <div class="entry-definition">${marked.parse(post.content)}</div>
+    <div class="post-nav">
+      ${prev ? `<button onclick="window.location.hash='${prev.id}'">Previous</button>` : ""}
+      <button onclick="window.location.href='${BASE_PATH}/index.html'">Back</button>
+      ${next ? `<button onclick="window.location.hash='${next.id}'">Next</button>` : ""}
     </div>
   `;
 }
 
-window.addEventListener("hashchange", renderPost);
+window.addEventListener("hashchange", renderEntry);
 
 loadPosts();

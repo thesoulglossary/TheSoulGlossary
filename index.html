@@ -5,58 +5,42 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Expires" content="0">
-
         <title>The Soul Glossary</title>
 
         <link rel="stylesheet" href="style.css">
-
     </head>
 
     <body>
 
-        <div class="layout">
+        <header class="mobile-header">
+            <h1>The Soul Glossary</h1>
+            <p>A living dictionary of becoming</p>
+        </header>
+
+        <div class="app">
 
             <aside class="sidebar">
-                <h2>The Soul Glossary</h2>
+                <h1>The Soul Glossary</h1>
+                <p class="tagline">A living dictionary of becoming.</p>
 
                 <div class="about">
                     <p>
-                        A living dictionary of thoughts, fragments, questions and quiet revelations.
-                    </p>
-                    <p>
-                        I write the words I wish I had when I needed them.
+                        This is where feelings are given language.
+                        Where fragments are archived.
+                        Where becoming is documented.
                     </p>
                 </div>
 
-                <div class="stats">
-                    <p>Total Entries: <span id="post-count">0</span></p>
-                    <p>Last Refreshed: <span id="last-refresh">—</span></p>
-                    <p>Refreshing in <span id="countdown">60</span>s</p>
-                </div>
-
-                <div class="social">
-                    <a href="#" target="_blank">Facebook</a>
-                    <a href="#" target="_blank">Instagram</a>
-                    <a href="#" target="_blank">Telegram</a>
-                    <a href="#" target="_blank">WhatsApp</a>
-                    <a href="#" target="_blank">Mastodon</a>
-                    <a href="#" target="_blank">Threads</a>
+                <div class="meta">
+                    <p><span id="post-count">0</span> entries</p>
                 </div>
             </aside>
 
-            <main class="content" id="page-wrapper">
-                <div id="posts"></div>
-
-                <footer class="footer">
-                    <p>© 2026 The Soul Glossary. A quiet archive of becoming.</p>
-                </footer>
-            </main>
+            <main class="dictionary" id="posts"></main>
 
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
         <script src="script.js"></script>
     </body>
 
